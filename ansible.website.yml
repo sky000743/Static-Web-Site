@@ -1,0 +1,35 @@
+---
+- name: Ansible-website
+  hosts: all
+  become: true
+  tasks:
+  - name: Install Httpd
+    yum:
+      name: httpd
+      state: present
+  
+  - name: Start httpd
+    systemd:
+      name: httpd
+      state: started
+      enabled: yes
+  
+  - name: Install Unzip
+    yum:
+      name: unzip
+      state: present
+  
+  - name: Start service and enable
+    get_url:
+      url: https://www.free-css.com/assets/files/free-css-templates/download/page289/hotelier.zip
+      dest: "/var/www/html/hotelier.zip"
+  
+  - name: Extract File
+    unarchive:
+      src: /var/www/html/hotelier.zip
+      dest: /var/www/html/
+      remote_src: true
+      extra_opts: '-o'
+      
+  - name: Move files
+    shell: "mv /var/www/html/hotel-html-template/* /var/www/html/" 
